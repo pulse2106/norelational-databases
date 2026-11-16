@@ -45,24 +45,34 @@ async function main() {
   //
   // Do the same here. Insert one book that has a publisher field
   // containing an embedded object with at least a name and a country.
+  db.books.insertOne({title: "Red Rising", publisher: {name: "Penguin", country: "United States"}})
 
   // ----------------------------------------------------------
   // TODO 2 - insertOne with an array
   // ----------------------------------------------------------
   // Insert one book that has a tags field containing
   // an array of at least 3 strings.
+  db.books.insertOne({title: "Shadow Slave", tags: ["Fantasy", "Adventure", "Action"]})
 
   // ----------------------------------------------------------
   // TODO 3 - insertMany
   // ----------------------------------------------------------
   // Insert at least 5 books in a single call using insertMany.
   // Include a mix: some with a publisher object, some with tags, some with both.
+  db.books.insertMany([
+    {title: "Harry Potter and the Philosophers Stone", publisher: {name: "Penguin", country: "United Kingdom"}},
+    {title: "Eragon", publisher: {name: "Bloomsbury", country: "United Kingdom"}},
+    {title: "Harry Potter and the Prisoner of Azkaban", tags: ["Adventure", "Magic", "Fantasy"]},
+    {title: "Harry Potter and the Goblet of Fire", publisher: {name: "Penguin", country: "United Kingdom"}, tags: ["Adventure", "Magic", "Fantasy"]},
+    {title: "Eldest", tags: ["Magic", "Fantasy", "Adventure", "Dragons"]}
+  ])
 
   // ----------------------------------------------------------
   // TODO 4 - find all documents
   // ----------------------------------------------------------
   // Retrieve every document in the collection and log each title.
   // Hint: find() returns a cursor - call .toArray() to get an array.
+  db.books.find({}).toArray()
 
   // ----------------------------------------------------------
   // TODO 5 - findOne with dot notation
@@ -71,12 +81,14 @@ async function main() {
   // Dot notation lets you filter on a field inside an embedded object:
   //   { "publisher.country": "France" }
   // Log the title of the result.
+  db.books.findOne({"publisher.country": "United States"})
 
   // ----------------------------------------------------------
   // TODO 6 - find with a filter
   // ----------------------------------------------------------
   // Find all books whose publisher.country is "France".
   // Log how many there are and list their titles.
+  db.books.find({tags: "Magic"})
 
   // ----------------------------------------------------------
   // TODO 7 - find with $exists
@@ -84,6 +96,7 @@ async function main() {
   // Find all books that have a tags field, regardless of its value.
   //   { tags: { $exists: true } }
   // Log each title and its tags array.
+  db.books.find({tags: {$exists: true}})
 
   // Always close the connection when you are done.
   await client.close();
